@@ -1,2 +1,4 @@
 .idea
+.backup
 codecrafters-redis-go.iml
+vendor/

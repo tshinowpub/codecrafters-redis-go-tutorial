@@ -32,3 +32,12 @@ Note: This section is for stages 2 and beyond.
    in `app/server.go`.
 1. Commit your changes and run `git push origin master` to submit your solution
    to CodeCrafters. Test output will be streamed to your terminal.
+
+# Links
+
+- package manager
+  - 現状のバージョンだと、go-modules と workspace を使って管理する
+  - https://blog.pepese.com/golang-modules-basics/
+  - https://zenn.dev/kimuson13/articles/go-workspace-mode-impressions
+  - https://future-architect.github.io/articles/20220216a/
+

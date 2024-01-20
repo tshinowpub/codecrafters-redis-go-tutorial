@@ -24,20 +24,24 @@ func (r *RespArrayResult) addValue(value []byte) {
 	r.value = append(r.value, value)
 }
 
-func (r *RespArrayResult) Length() int {
+func (r *RespArrayResult) length() int {
 	return len(r.value)
 }
 
-func (r *RespArrayResult) Values() [][]byte {
+func (r *RespArrayResult) values() [][]byte {
 	return r.value
+}
+
+func (r *RespArrayResult) Command() []byte {
+	return r.value[0]
 }
 
 func New() Parser {
 	return Parser{}
 }
 
-func (parser *Parser) ParseArray(values []byte) (*RespArrayResult, error) {
-	fmt.Printf("テストだよ！, %s\n", values)
+func (parser *Parser) parseArray(values []byte) (*RespArrayResult, error) {
+	fmt.Printf("入力値：, %s\n", values)
 
 	respInput, err := newRespInput(values)
 	if err != nil {

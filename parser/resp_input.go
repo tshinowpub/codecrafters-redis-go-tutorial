@@ -3,7 +3,6 @@ package parser
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"strconv"
 )
 
@@ -45,8 +44,6 @@ func (r *RespInput) process() (*RespArrayResult, error) {
 		return result, nil
 	}
 
-	fmt.Printf("長さは！: %s\n", strconv.Itoa(count))
-
 	/**
 	 * Resp配列のバイト数を取得
 	 */
@@ -56,8 +53,6 @@ func (r *RespInput) process() (*RespArrayResult, error) {
 	}
 
 	value := r.input[firstValueIndex:]
-
-	fmt.Printf("残りは！: %s\n", string(value))
 
 	for i := 1; i <= count; i++ {
 		index := bytes.Index(value, []byte(Separator))
@@ -70,14 +65,10 @@ func (r *RespInput) process() (*RespArrayResult, error) {
 			return result, errors.New("byte string is not resp format")
 		}
 
-		fmt.Printf("実際の値%sの長さは！: %s\n", strconv.Itoa(i), byteLength)
-
 		/**
 		 * Resp配列の値を取得
 		 */
 		value = value[index+len([]byte(Separator)):]
-
-		fmt.Printf("%sでのResp配列の値は！: %s\n", strconv.Itoa(i), value)
 
 		index = bytes.Index(value, []byte(Separator))
 		if index == -1 {
@@ -88,8 +79,6 @@ func (r *RespInput) process() (*RespArrayResult, error) {
 		if byteLength != len(respValue) {
 			return result, errors.New("byte string is not resp format, The number of bytes specified differs from the actual value")
 		}
-
-		fmt.Printf("%sでのRespValuesは！: %s\n", strconv.Itoa(i), respValue)
 
 		result.addValue(respValue)
 

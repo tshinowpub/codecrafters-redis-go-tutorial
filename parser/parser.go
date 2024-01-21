@@ -21,9 +21,9 @@ func New() Parser {
 func (parser *Parser) parseArray(input *RespInput) ParseResult {
 	fmt.Printf("入力値：, %s\n", input.input)
 
-	count, calcArrayLengthError := parser.calcArrayLength(input)
-	if calcArrayLengthError != nil {
-		return parseFailed(calcArrayLengthError)
+	count, err := parser.calcLength(input)
+	if err != nil {
+		return parseFailed(err)
 	}
 
 	/**
@@ -71,7 +71,7 @@ func (parser *Parser) parseArray(input *RespInput) ParseResult {
 	return parseSucceeded(tokens)
 }
 
-func (parser *Parser) calcArrayLength(input *RespInput) (int, error) {
+func (parser *Parser) calcLength(input *RespInput) (int, error) {
 	index := bytes.Index(input.values(), []byte(Separator))
 	if index == -1 {
 		return -1, errors.New("byte string is not resp format")

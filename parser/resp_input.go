@@ -36,12 +36,10 @@ func (r *RespInput) calcArrayLength() (int, error) {
 	return length, nil
 }
 
-func (r *RespInput) process() (*RespArrayResult, error) {
-	result := NewRespArrayResult()
-
-	count, calculateError := r.calcArrayLength()
-	if calculateError != nil {
-		return result, nil
+func (r *RespInput) process() ParseResult {
+	count, calcArrayLengthError := r.calcArrayLength()
+	if calcArrayLengthError != nil {
+		return parseFailed(calcArrayLengthError)
 	}
 
 	/**
@@ -49,20 +47,21 @@ func (r *RespInput) process() (*RespArrayResult, error) {
 	 */
 	firstValueIndex := bytes.Index(r.input, []byte("$"))
 	if firstValueIndex == -1 {
-		return result, errors.New("byte string is not resp format in order string")
+		return parseFailed(errors.New("byte string is not resp format in order string"))
 	}
 
 	value := r.input[firstValueIndex:]
 
+	var tokens []Token
 	for i := 1; i <= count; i++ {
 		index := bytes.Index(value, []byte(Separator))
 		if index == -1 {
-			return result, errors.New("byte string is not resp format")
+			return parseFailed(errors.New("byte string is not resp format"))
 		}
 
 		byteLength, err := strconv.Atoi(string(value[1:index]))
 		if err != nil {
-			return result, errors.New("byte string is not resp format")
+			return parseFailed(errors.New("byte string is not resp format"))
 		}
 
 		/**
@@ -72,18 +71,18 @@ func (r *RespInput) process() (*RespArrayResult, error) {
 
 		index = bytes.Index(value, []byte(Separator))
 		if index == -1 {
-			return result, errors.New("byte string is not resp format, resp array value is not found")
+			return parseFailed(errors.New("byte string is not resp format, resp array value is not found"))
 		}
 
 		respValue := value[0:index]
 		if byteLength != len(respValue) {
-			return result, errors.New("byte string is not resp format, The number of bytes specified differs from the actual value")
+			return parseFailed(errors.New("byte string is not resp format, The number of bytes specified differs from the actual value"))
 		}
 
-		result.addValue(respValue)
+		tokens = append(tokens, respValue)
 
 		value = value[index+byteLength:]
 	}
 
-	return result, nil
+	return parseSucceeded(tokens)
 }

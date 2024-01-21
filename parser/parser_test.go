@@ -6,9 +6,11 @@ import (
 )
 
 func TestParseArrayString(t *testing.T) {
-	redisParser := New()
+	parser := New()
 
-	result := redisParser.parseArray([]byte("*2\\r\\n$4\\r\\nECHO\\r\\n$3\\r\\nhey\\r\\n"))
+	input, _ := newRespInput([]byte("*2\\r\\n$4\\r\\nECHO\\r\\n$3\\r\\nhey\\r\\n"))
+
+	result := parser.parseArray(input)
 
 	require.Equal(t, 2, result.length())
 	require.Equal(t, "ECHO", string(result.values()[0]))
@@ -16,11 +18,11 @@ func TestParseArrayString(t *testing.T) {
 }
 
 func TestParseArrayStringError(t *testing.T) {
-	redisParser := New()
+	parser := New()
 
-	result := redisParser.parseArray([]byte("*2\\r\\n$4\\r\\nECHO\\r\\n$3\\r\\nhey\\r\\n"))
+	input, _ := newRespInput([]byte("*2"))
 
-	require.Equal(t, 2, result.length())
-	require.Equal(t, "ECHO", string(result.values()[0]))
-	require.Equal(t, "hey", string(result.values()[1]))
+	result := parser.parseArray(input)
+
+	require.Equal(t, 0, result.length())
 }

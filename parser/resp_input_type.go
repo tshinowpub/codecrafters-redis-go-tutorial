@@ -14,7 +14,7 @@ const (
 	UNSUPPORTED
 )
 
-func (i *RespInputType) IsUnsupported() bool {
+func (i *RespInputType) isUnsupported() bool {
 	return i.String() == "UNSUPPORTED"
 }
 

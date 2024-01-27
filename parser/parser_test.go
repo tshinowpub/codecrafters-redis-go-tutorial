@@ -8,9 +8,9 @@ import (
 func TestParseArrayString(t *testing.T) {
 	parser := New()
 
-	input, _ := newRespInput([]byte("*2\\r\\n$4\\r\\nECHO\\r\\n$3\\r\\nhey\\r\\n"))
+	input, _ := NewRespInput([]byte("*2\\r\\n$4\\r\\nECHO\\r\\n$3\\r\\nhey\\r\\n"))
 
-	result := parser.parseArray(input)
+	result := parser.ParseArray(input)
 
 	require.Equal(t, 2, result.length())
 	require.Equal(t, "ECHO", string(result.values()[0]))
@@ -20,9 +20,9 @@ func TestParseArrayString(t *testing.T) {
 func TestParseArrayStringError(t *testing.T) {
 	parser := New()
 
-	input, _ := newRespInput([]byte("*2"))
+	input, _ := NewRespInput([]byte("*2"))
 
-	result := parser.parseArray(input)
+	result := parser.ParseArray(input)
 
 	require.Equal(t, 0, result.length())
 }

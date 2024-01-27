@@ -18,7 +18,7 @@ func New() Parser {
 	return Parser{}
 }
 
-func (parser *Parser) parseArray(input *RespInput) ParseResult {
+func (parser *Parser) ParseArray(input *RespInput) ParseResult {
 	fmt.Printf("入力値：, %s\n", input.input)
 
 	count, err := parser.calcLength(input)

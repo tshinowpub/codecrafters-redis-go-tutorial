@@ -14,11 +14,15 @@ const (
 	UNSUPPORTED
 )
 
-func (i *RespInputType) isUnsupported() bool {
+func (i RespInputType) isUnsupported() bool {
 	return i.String() == "UNSUPPORTED"
 }
 
-func FromFirstByte(value byte) RespInputType {
+func (i RespInputType) isArray() bool {
+	return i.String() == "Array"
+}
+
+func fromFirstByte(value byte) RespInputType {
 	switch value {
 	case '*':
 		return Array

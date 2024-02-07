@@ -14,7 +14,7 @@ func badRequest(value []byte) Response {
 	return Response{value: bytes.Join([][]byte{[]byte("-"), value, []byte("\r\n")}, []byte{})}
 }
 
-func (p *Response) getValue() []byte {
+func (p *Response) GetValue() []byte {
 	return p.value
 }
 

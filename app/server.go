@@ -2,27 +2,31 @@ package main
 
 import (
 	"fmt"
-	"net"
+	"github.com/tshinowpub/codecrafters-redis-go/server"
 	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 )
 
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running test.
-	fmt.Println("Logs from your program will appear here!")
+	signalChannel := make(chan os.Signal, 1)
+	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
 
-	// Uncomment this block to pass the first stage
-	//
-	l, err := net.Listen("tcp", "0.0.0.0:6379")
-	if err != nil {
-		fmt.Println("Failed to bind to port 6379")
-		os.Exit(1)
-	}
+	var wg sync.WaitGroup
+	ch := make(chan struct{})
 
-	fmt.Println("Socket opened. Address was 0.0.0.0:6379.")
+	s := server.NewServer(&wg, 6380)
 
-	_, err = l.Accept()
-	if err != nil {
-		fmt.Println("Error accepting connection: ", err.Error())
-		os.Exit(1)
-	}
+	go s.Listen()
+
+	<-signalChannel
+
+	s.Terminate()
+
+	close(ch)
+
+	wg.Wait()
+
+	fmt.Println("Server shutting down.")
 }

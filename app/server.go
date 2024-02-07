@@ -14,7 +14,6 @@ func main() {
 	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
 
 	var wg sync.WaitGroup
-	ch := make(chan struct{})
 
 	s := server.NewServer(&wg, 6380)
 
@@ -23,8 +22,6 @@ func main() {
 	<-signalChannel
 
 	s.Terminate()
-
-	close(ch)
 
 	wg.Wait()
 
